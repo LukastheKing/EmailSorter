@@ -12,17 +12,17 @@ class email:
 emails = []
 
 #Adding emails to list
-emails.append(email("tomgo@gmail.com","About that game","Hey that game that you told me about..."))
-emails.append(email("JakeWork@gmail.com","You broke the database again","You did it again, the whole app is down.."))
+emails.append(email("bigNews@bignews.corp.org", "Zuckeberg to fight Musk", "Drama heats up as Mark and Elon snap back at eachother..."))
+emails.append(email("tomgo@gmail.com", "About that game", "Hey that game that you told me about..."))
+emails.append(email("JakeWork@gmail.com", "You broke the database again", "You did it again, the whole app is down.."))
 
 # Printing out the contents
+sorted_emails = sorted(emails, key=lambda x: x.email_subject)
 
-for obj in emails:
-    print("")
+for obj in sorted_emails:
+    print("") 
     # Call the vars() on Object
     obj_vars = vars(obj)
 
     # Print the properties
     pprint(obj_vars)
-    
-    print("")
