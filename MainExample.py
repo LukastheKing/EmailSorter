@@ -1,12 +1,16 @@
-# imports
+# Imports 
+# Imports pprint
 from pprint import pprint
-
 
 # Created class for the emails
 class Email:
+    # Defines init function of the class with 3 parameters
     def __init__(self, email_sender, email_subject, email_content):
+        # Assigns the email_sender propertie to the class
         self.email_sender = email_sender
+        # Assigns the email_subject propertie to the class
         self.email_subject = email_subject
+        # Assigns the email_content propertie to the class
         self.email_content = email_content
 
 # Create received email list
@@ -21,7 +25,7 @@ emails = [
 # Create ditionary per sender
 emails_by_sender = {}
 
-# Sort based on sender
+# Sorts the emails based on sender
 for email in emails:
     email_sender = email.email_sender
     if email_sender not in emails_by_sender:
