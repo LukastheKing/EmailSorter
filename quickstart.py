@@ -41,12 +41,17 @@ def main():
         results = service.users().labels().list(userId='me').execute()
         labels = results.get('labels',[])
 
+        label_names = []
+
         if not labels:
             print('No labels found.')
             return
-        print('Labels:')
+        #print('Labels:')
         for label in labels:
-            print(label['name'])
+            label_names.append(label['name'])  # Append each label name to the list
+
+        #print('Labels saved:', label_names)
+        return label_names
 
     except HttpError as error:
         #TODO(developer) - Handle errors form gmail API.
