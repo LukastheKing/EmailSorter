@@ -7,6 +7,8 @@ import os.path
 # Imports pickle
 import pickle
 
+import pprint
+
 # Imports Request from google.auth.transprot.request 
 from google.auth.transport.requests import Request
 # Imports Credentials from google.oauth2.credentials
@@ -69,28 +71,40 @@ def main():
         service = build('gmail', 'v1', credentials = creds)
 
         # Code for message functionality
+        # Lists all messages in the user's inbox
+        # Assigns the listed messages to results
         results = service.users().messages().list(userId='me').execute()
+        # Gets the messages in results and assigns them to messages
         messages = results.get('messages', [])
 
+        # Determines if theres no emails in the inbox
         if not messages:
             print('No messages found.')
             return
         
+        # Loops through each message and retrives its subject
         for message in messages:
+            # Assigns the if from message to message_id
             message_id = message['id']
+            # Gets the message based on the message_id and assigns it to msg
             msg = service.users().messages().get(userId='me', id=message_id).execute()
 
+            # Assings the value of None to subject
             subject = None
+            # Loops through each header or subject in msg
             for header in msg['payload']['headers']:
+                # Determines if the headers name is equal to the subject
                 if header['name'] == 'Subject':
+                    # Assigns the header value to subject
                     subject = header['value']
                     break
 
+            # Prints the subject of the message or a default message if no subject is found
             if subject:
-                print(f"Subject: {subject}")
+                print(f"Subject: {subject} \n")
             else:
                 print("No subject found.")
-            print("------")
+            print("------ \n")
 
         # Code for label functionality
         """
