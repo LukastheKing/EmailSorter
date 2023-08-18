@@ -27,7 +27,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 # Defines main function 
-def get_email_subjects():
+def get_email_info():
     # sets creds value to None
     creds = None
     
@@ -63,7 +63,7 @@ def get_email_subjects():
             pickle.dump(creds, token)
     
     # Creates an empty list fo the subjects
-    email_subjects = []
+    email_info_list = []
 
     try:
         # Call the Gmail API
@@ -81,7 +81,7 @@ def get_email_subjects():
         # Determines if theres no emails in the inbox
         if not messages:
             print('No messages found.')
-            return email_subjects
+            return email_info_list
         
         # Loops through each message and retrives its subject
         for message in messages:
@@ -90,8 +90,11 @@ def get_email_subjects():
             # Gets the message based on the message_id and assigns it to msg
             msg = service.users().messages().get(userId='me', id=message_id).execute()
 
-            # Assings the value of None to subject
+            # Assings the values of None to subject, sende email, sender name
             subject = None
+            sender_email = None
+            sender_name = None
+
             # Loops through each header or subject in msg
             for header in msg['payload']['headers']:
                 # Determines if the headers name is equal to the subject
@@ -99,8 +102,16 @@ def get_email_subjects():
                     # Assigns the header value to subject
                     subject = header['value']
                     break
-
-            email_subjects.append({'subject': subject, 'message':msg})
+                elif header['name'] == 'From':
+                    sender_info = header['value']
+                    sender_name, sender_email = parse_sender_info(sender_info)
+                
+            email_info_list.append({
+                'subject': subject,
+                'sender_name': sender_name,
+                'sender_email': sender_email,
+                'message':msg
+            })
 
             """
             # Prints the subject of the message or a default message if no subject is found
@@ -116,10 +127,17 @@ def get_email_subjects():
         #TODO(developer) - Handle errors form gmail API.
         print(f'An error ocurred:{error}')
 
-    return email_subjects
+    return email_info_list
+
+def parse_sender_info(sender_info):
+    # Parse sender info in the format "Name <email>"
+    sender_name, sender_email = sender_info.split('<')
+    sender_name = sender_name.strip()
+    sender_email = sender_email.replace('>', '').strip()
+    return sender_name, sender_email
 
 # Runs main function
 if __name__ == '__main__':
     # Calls the main function
-    email_subjects = get_email_subjects()
-    print(email_subjects)
+    email_info_list = get_email_info()
+    print(email_info_list)
