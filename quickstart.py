@@ -21,10 +21,6 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # Main code function 
-""" 
-    Shows basic usage of the gmail API.
-    Lists the user's Gmail labels.
-"""
 
 # Sets the scope of the project to read only
 # If modyfying these scopes, delete the file token.json.
@@ -39,6 +35,7 @@ def get_email_subjects():
         The file token.json stores the user's access and refresh tokens, and is 
         created automatically when the authorization flow completes for the first time.
     """
+
     # Creates the token.json file which stores the user's access and refresh tokens
     if os.path.exists('token.pickle'):
         # Uses open to open the token.pickle in read binary mode (rb) as the token
@@ -74,6 +71,7 @@ def get_email_subjects():
         service = build('gmail', 'v1', credentials = creds)
 
         # Code for message functionality
+        
         # Lists all messages in the user's inbox
         # Assigns the listed messages to results
         results = service.users().messages().list(userId='me').execute()
@@ -113,23 +111,6 @@ def get_email_subjects():
             print("------ \n")
             """
 
-        # Code for label functionality
-        """
-            results = service.users().labels().list(userId='me').execute()
-            labels = results.get('labels',[])
-
-            label_names = []
-
-            if not labels:
-                print('No labels found.')
-                return
-            #print('Labels:')
-            for label in labels:
-                label_names.append(label['name'])  # Append each label name to the list
-
-            #print('Labels saved:', label_names)
-            return label_names
-        """
     # Uses HttpError to send an error if something fails
     except HttpError as error:
         #TODO(developer) - Handle errors form gmail API.
@@ -140,5 +121,5 @@ def get_email_subjects():
 # Runs main function
 if __name__ == '__main__':
     # Calls the main function
-    main = get_email_subjects()
-    print(main)
+    email_subjects = get_email_subjects()
+    print(email_subjects)

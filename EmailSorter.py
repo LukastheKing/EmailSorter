@@ -1,20 +1,15 @@
 # Imports
 # Imports customkinter and its functions as ctk
 import customtkinter as ctk
-# Imports the main function from quick start
+# Imports the get_email_subjects function from quick start
 from quickstart import get_email_subjects
 
 # Main code function
-
 # Sets appearance and color for the window
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
-# Code for label functionality
-"""
-if __name__ == '__main__':
-    label_names = main()
-"""
+# Code for subject functionality
 email_subjects = get_email_subjects()
 
 # Creates the new window class with its properties and its "Widgets"
@@ -42,11 +37,13 @@ class App(ctk.CTk):
 
     # Defines button_callback function with the paramaters of self to give functionality to the button
     def button_callback(self):
-        # Button main functionality 
-        #self.textbox.insert("0.0", f"{label_names} \n")
-        #self.textbox.insert("0.0","PP \n")
+        # Button main functionality
+        #self.textbox.insert("0.0","PP \n") # Testing code
+
+        # Loops through each email in emails_subjects
         for email in email_subjects:
-            #print(f"Subject: {email['subject']}")
+            #print(f"Subject: {email['subject']}") # Testing code
+            # Inserts the subjects into the textbox
             self.textbox.insert("0.0", f"Subject: {email['subject']} \n")
 
 # Creates app object based on the App class
