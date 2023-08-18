@@ -31,7 +31,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 # Defines main function 
-def main():
+def get_email_subjects():
     # sets creds value to None
     creds = None
     
@@ -65,6 +65,9 @@ def main():
             # Uses dump to save the credentials into the file
             pickle.dump(creds, token)
     
+    # Creates an empty list fo the subjects
+    email_subjects = []
+
     try:
         # Call the Gmail API
         # Builds access to the gmail api
@@ -80,7 +83,7 @@ def main():
         # Determines if theres no emails in the inbox
         if not messages:
             print('No messages found.')
-            return
+            return email_subjects
         
         # Loops through each message and retrives its subject
         for message in messages:
@@ -99,12 +102,16 @@ def main():
                     subject = header['value']
                     break
 
+            email_subjects.append({'subject': subject, 'message':msg})
+
+            """
             # Prints the subject of the message or a default message if no subject is found
             if subject:
                 print(f"Subject: {subject} \n")
             else:
                 print("No subject found.")
             print("------ \n")
+            """
 
         # Code for label functionality
         """
@@ -123,13 +130,15 @@ def main():
             #print('Labels saved:', label_names)
             return label_names
         """
-    
     # Uses HttpError to send an error if something fails
     except HttpError as error:
         #TODO(developer) - Handle errors form gmail API.
         print(f'An error ocurred:{error}')
 
+    return email_subjects
+
 # Runs main function
 if __name__ == '__main__':
     # Calls the main function
-    main()
+    main = get_email_subjects()
+    print(main)
