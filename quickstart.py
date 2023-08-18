@@ -68,7 +68,31 @@ def main():
         # Builds access to the gmail api
         service = build('gmail', 'v1', credentials = creds)
 
-        # Code label functionality
+        # Code for message functionality
+        results = service.users().messages().list(userId='me').execute()
+        messages = results.get('messages', [])
+
+        if not messages:
+            print('No messages found.')
+            return
+        
+        for message in messages:
+            message_id = message['id']
+            msg = service.users().messages().get(userId='me', id=message_id).execute()
+
+            subject = None
+            for header in msg['payload']['headers']:
+                if header['name'] == 'Subject':
+                    subject = header['value']
+                    break
+
+            if subject:
+                print(f"Subject: {subject}")
+            else:
+                print("No subject found.")
+            print("------")
+
+        # Code for label functionality
         """
             results = service.users().labels().list(userId='me').execute()
             labels = results.get('labels',[])
@@ -85,6 +109,7 @@ def main():
             #print('Labels saved:', label_names)
             return label_names
         """
+    
     # Uses HttpError to send an error if something fails
     except HttpError as error:
         #TODO(developer) - Handle errors form gmail API.
