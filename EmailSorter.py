@@ -2,7 +2,7 @@
 # Imports customkinter and its functions as ctk
 import customtkinter as ctk
 # Imports the get_email_subjects function from quick start
-from quickstart import get_email_subjects
+from quickstart import get_email_info
 
 # Main code function
 # Sets appearance and color for the window
@@ -10,7 +10,7 @@ ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
 # Code for subject functionality
-email_subjects = get_email_subjects()
+email_info_list = get_email_info()
 
 # Creates the new window class with its properties and its "Widgets"
 class App(ctk.CTk):
@@ -31,7 +31,7 @@ class App(ctk.CTk):
         self.button.pack(padx=20, pady=20)
 
         # Creates text box and gives it a width and a corner radius
-        self.textbox = ctk.CTkTextbox(self, width=800, corner_radius=0)
+        self.textbox = ctk.CTkTextbox(self, width=1000, height=600, corner_radius=0)
         # Sets the padding on both the x and y axis to 20
         self.textbox.pack(padx=20, pady=20)
 
@@ -41,11 +41,16 @@ class App(ctk.CTk):
         #self.textbox.insert("0.0","PP \n") # Testing code
 
         # Loops through each email in emails_subjects
-        for email in email_subjects:
-            #print(f"Subject: {email['subject']}") # Testing code
-            # Inserts the subjects into the textbox
-            self.textbox.insert("0.0", f"Subject: {email['subject']} \n")
+        for email_info in email_info_list:
+            # Prints out for testing
+            #print(f"Sender: {email_info['sender_name']} <{email_info['sender_email']}>")
+            #print(f"Subject: {email_info['subject']}") 
+            #print("------")
 
+            # Inserts the subjects into the textbox
+            self.textbox.insert("0.0", "----------\n")
+            self.textbox.insert("0.0", f"Subject: {email_info['subject']}\n")
+            self.textbox.insert("0.0", f"Sender: {email_info['sender_name']} <{email_info['sender_email']}>\n")
 # Creates app object based on the App class
 app = App()
 # Calls the window on startup
