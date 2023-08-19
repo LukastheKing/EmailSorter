@@ -4,6 +4,8 @@ import customtkinter as ctk
 # Imports the get_email_subjects function from quick start
 from quickstart import get_grouped_emails
 
+from pprint import pprint
+
 # Main code function
 # Sets appearance and color for the window
 ctk.set_appearance_mode("System")
@@ -31,7 +33,7 @@ class App(ctk.CTk):
         self.button.pack(padx=20, pady=20)
 
         # Creates text box and gives it a width and a corner radius
-        self.textbox = ctk.CTkTextbox(self, width=1000, height=600, corner_radius=0)
+        self.textbox = ctk.CTkTextbox(self, width=1300, height=600, corner_radius=0)
         # Sets the padding on both the x and y axis to 20
         self.textbox.pack(padx=20, pady=20)
 
@@ -39,7 +41,7 @@ class App(ctk.CTk):
     def button_callback(self):
         # Button main functionality
 
-        #"""
+        """
         # Prints out for testing
         for sender_email, emails in grouped_emails.items():
             # Prints senders name
@@ -49,16 +51,18 @@ class App(ctk.CTk):
             for email_info in emails:
                 # Assigns the value of subject as the subject from email info
                 subject = email_info['subject']
+                snippet = email_info['message']['snippet']
                 
                 # Printing the subject
-                print(f"\t Subject: {subject}")
-                print("\t----------\n")
+                pprint(f"Subject: {subject}")
+                pprint(f"Snippet: {snippet}")
+                print("----------\n")
 
             # Divider
             print("----------")
-        #"""
-
         """
+
+        #"""
         # Loops through each sender and email in the grouped emails
         for sender_email, emails in grouped_emails.items():
 
@@ -66,15 +70,17 @@ class App(ctk.CTk):
             for email_info in emails:
                 # Assigns the value of subject as the subject from email info
                 subject = email_info['subject']
+                snippet = email_info['message']['snippet']
                 
                 # Inserts Subject into text box
                 self.textbox.insert("0.0", "\t--------------------\n")
+                self.textbox.insert("0.0", f"\t{snippet}\n")
                 self.textbox.insert("0.0", f"\tSubject: {subject}\n")
 
             # Inserts Senders name and email into text box
             self.textbox.insert("0.0", "----------------------------------------\n")
             self.textbox.insert("0.0", f"Sent by: {emails[0]['sender_name']} <{sender_email}> : \n")
-        """
+        #"""
 
 # Creates app object based on the App class
 app = App()

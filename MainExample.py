@@ -10,7 +10,7 @@ class Email:
         self.email_sender = email_sender
         # Assigns the email_subject propertie to the class | Added 
         self.email_subject = email_subject
-        # Assigns the email_content propertie to the class
+        # Assigns the email_content propertie to the class | Added
         self.email_content = email_content
 
 # Create received email list
