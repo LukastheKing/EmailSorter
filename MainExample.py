@@ -6,7 +6,7 @@ from pprint import pprint
 class Email:
     # Defines init function of the class with 3 parameters
     def __init__(self, email_sender, email_subject, email_content):
-        # Assigns the email_sender propertie to the class
+        # Assigns the email_sender propertie to the class | Added
         self.email_sender = email_sender
         # Assigns the email_subject propertie to the class | Added 
         self.email_subject = email_subject

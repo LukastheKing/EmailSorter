@@ -26,7 +26,7 @@ class App(ctk.CTk):
         self.geometry("400x150")
 
         # Creates button and gives it text and sets functionality
-        self.button = ctk.CTkButton(self, text="my button", command=self.button_callback)
+        self.button = ctk.CTkButton(self, text="Print out emails", command=self.button_callback)
         # Sets the padding on both the x and y axis to 20
         self.button.pack(padx=20, pady=20)
 
@@ -38,9 +38,8 @@ class App(ctk.CTk):
     # Defines button_callback function with the paramaters of self to give functionality to the button
     def button_callback(self):
         # Button main functionality
-        #self.textbox.insert("0.0","PP \n") # Testing code
 
-        """
+        #"""
         # Prints out for testing
         for sender_email, emails in grouped_emails.items():
             # Prints senders name
@@ -51,14 +50,16 @@ class App(ctk.CTk):
                 # Assigns the value of subject as the subject from email info
                 subject = email_info['subject']
                 
-                # Printing
+                # Printing the subject
                 print(f"\t Subject: {subject}")
                 print("\t----------\n")
 
+            # Divider
             print("----------")
-        """
+        #"""
 
-        # Loops through each sender in the grouped emails
+        """
+        # Loops through each sender and email in the grouped emails
         for sender_email, emails in grouped_emails.items():
 
             # Loops through the email info in emails
@@ -66,14 +67,14 @@ class App(ctk.CTk):
                 # Assigns the value of subject as the subject from email info
                 subject = email_info['subject']
                 
-                # Text box inserting 
+                # Inserts Subject into text box
                 self.textbox.insert("0.0", "\t--------------------\n")
                 self.textbox.insert("0.0", f"\tSubject: {subject}\n")
 
-            # Inserts Senders name and email 
+            # Inserts Senders name and email into text box
             self.textbox.insert("0.0", "----------------------------------------\n")
             self.textbox.insert("0.0", f"Sent by: {emails[0]['sender_name']} <{sender_email}> : \n")
-        
+        """
 
 # Creates app object based on the App class
 app = App()

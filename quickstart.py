@@ -7,8 +7,6 @@ import os.path
 # Imports pickle
 import pickle
 
-import pprint
-
 # Imports Request from google.auth.transprot.request 
 from google.auth.transport.requests import Request
 # Imports Credentials from google.oauth2.credentials
@@ -134,19 +132,31 @@ def parse_sender_info(sender_info):
     sender_name, sender_email = sender_info.split('<')
     sender_name = sender_name.strip()
     sender_email = sender_email.replace('>', '').strip()
+    
+    # Returns senders name and email 
     return sender_name, sender_email
 
 def get_grouped_emails():
+    # Groups up emails by sender 
+
+    # Creates a variable with the value of the function get_email_info
     email_info_list = get_email_info()
 
+    # Makes an empty dictionary for grouping
     grouped_emails = {}
 
+    # Loops through the email info in the email info list
     for email_info in email_info_list:
+        # Gets the email sender from sender_email
         sender_email = email_info['sender_email']
+        # Determines if the sender has not been grouped in the dictionary
         if sender_email not in grouped_emails:
+            # Adds the email into the dictionary
             grouped_emails[sender_email] = []
+        # appends the email info 
         grouped_emails[sender_email].append(email_info)
 
+    # Returns the grouped emails
     return grouped_emails
 
 # Runs main function
