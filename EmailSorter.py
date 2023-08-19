@@ -2,7 +2,7 @@
 # Imports customkinter and its functions as ctk
 import customtkinter as ctk
 # Imports the get_email_subjects function from quick start
-from quickstart import get_email_info
+from quickstart import get_grouped_emails
 
 # Main code function
 # Sets appearance and color for the window
@@ -10,7 +10,7 @@ ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
 # Code for subject functionality
-email_info_list = get_email_info()
+grouped_emails = get_grouped_emails()
 
 # Creates the new window class with its properties and its "Widgets"
 class App(ctk.CTk):
@@ -40,17 +40,41 @@ class App(ctk.CTk):
         # Button main functionality
         #self.textbox.insert("0.0","PP \n") # Testing code
 
-        # Loops through each email in emails_subjects
-        for email_info in email_info_list:
-            # Prints out for testing
-            #print(f"Sender: {email_info['sender_name']} <{email_info['sender_email']}>")
-            #print(f"Subject: {email_info['subject']}") 
-            #print("------")
+        """
+        # Prints out for testing
+        for sender_email, emails in grouped_emails.items():
+            # Prints senders name
+            print(f"Sent by: {emails[0]['sender_name']} <{sender_email}> : \n")
 
-            # Inserts the subjects into the textbox
-            self.textbox.insert("0.0", "----------\n")
-            self.textbox.insert("0.0", f"Subject: {email_info['subject']}\n")
-            self.textbox.insert("0.0", f"Sender: {email_info['sender_name']} <{email_info['sender_email']}>\n")
+            # Loops through the email info in emails
+            for email_info in emails:
+                # Assigns the value of subject as the subject from email info
+                subject = email_info['subject']
+                
+                # Printing
+                print(f"\t Subject: {subject}")
+                print("\t----------\n")
+
+            print("----------")
+        """
+
+        # Loops through each sender in the grouped emails
+        for sender_email, emails in grouped_emails.items():
+
+            # Loops through the email info in emails
+            for email_info in emails:
+                # Assigns the value of subject as the subject from email info
+                subject = email_info['subject']
+                
+                # Text box inserting 
+                self.textbox.insert("0.0", "\t--------------------\n")
+                self.textbox.insert("0.0", f"\tSubject: {subject}\n")
+
+            # Inserts Senders name and email 
+            self.textbox.insert("0.0", "----------------------------------------\n")
+            self.textbox.insert("0.0", f"Sent by: {emails[0]['sender_name']} <{sender_email}> : \n")
+        
+
 # Creates app object based on the App class
 app = App()
 # Calls the window on startup

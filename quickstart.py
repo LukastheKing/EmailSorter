@@ -136,8 +136,21 @@ def parse_sender_info(sender_info):
     sender_email = sender_email.replace('>', '').strip()
     return sender_name, sender_email
 
+def get_grouped_emails():
+    email_info_list = get_email_info()
+
+    grouped_emails = {}
+
+    for email_info in email_info_list:
+        sender_email = email_info['sender_email']
+        if sender_email not in grouped_emails:
+            grouped_emails[sender_email] = []
+        grouped_emails[sender_email].append(email_info)
+
+    return grouped_emails
+
 # Runs main function
 if __name__ == '__main__':
     # Calls the main function
-    email_info_list = get_email_info()
-    print(email_info_list)
+    grouped_emails = get_grouped_emails()
+    print(grouped_emails)
