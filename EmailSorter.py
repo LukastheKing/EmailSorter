@@ -3,7 +3,9 @@
 import customtkinter as ctk
 # Imports the get_email_subjects function from quick start
 from quickstart import get_grouped_emails
-
+# Import the get_label_info function from quickstart
+from quickstart import get_label_info
+# Imports the pprint function from pprint
 from pprint import pprint
 
 # Main code function
@@ -13,6 +15,8 @@ ctk.set_default_color_theme("blue")
 
 # Code for subject functionality
 grouped_emails = get_grouped_emails()
+# 
+label_info_list = get_label_info()
 
 # Creates the new window class with its properties and its "Widgets"
 class App(ctk.CTk):
@@ -60,9 +64,14 @@ class App(ctk.CTk):
 
             # Divider
             print("----------")
+
+        for label_info in label_info_list:
+            label_name = label_info['label_name']
+            pprint(f"Label: {label_name}")
+            print("----------\n")
         """
 
-        #"""
+        """
         # Loops through each sender and email in the grouped emails
         for sender_email, emails in grouped_emails.items():
 
@@ -80,7 +89,7 @@ class App(ctk.CTk):
             # Inserts Senders name and email into text box
             self.textbox.insert("0.0", "----------------------------------------\n")
             self.textbox.insert("0.0", f"Sent by: {emails[0]['sender_name']} <{sender_email}> : \n")
-        #"""
+        """
 
 # Creates app object based on the App class
 app = App()
