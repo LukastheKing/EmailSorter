@@ -7,6 +7,8 @@ import os.path
 # Imports pickle
 import pickle
 
+from pprint import pprint 
+
 # Imports Request from google.auth.transprot.request 
 from google.auth.transport.requests import Request
 # Imports Credentials from google.oauth2.credentials
@@ -22,10 +24,10 @@ from googleapiclient.errors import HttpError
 
 # Sets the scope of the project to read only
 # If modyfying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.labels']
 
-# Defines main function 
-def get_email_info():
+# Gets the authentication credits for the gmail api
+def authenticate_gmail():
     # sets creds value to None
     creds = None
     
@@ -59,16 +61,20 @@ def get_email_info():
         with open('token.pickle', 'wb') as token:
             # Uses dump to save the credentials into the file
             pickle.dump(creds, token)
-    
+    return creds
+
+# Gets all the email info: subject, sender and message
+def get_email_info():
+    # Gets the credits from the authentication function
+    creds = authenticate_gmail()
+
     # Creates an empty list fo the subjects
     email_info_list = []
 
+    # Calls the Gmail API and tries to run the code
     try:
-        # Call the Gmail API
         # Builds access to the gmail api
         service = build('gmail', 'v1', credentials = creds)
-
-        # Code for message functionality
         
         # Lists all messages in the user's inbox
         # Assigns the listed messages to results
@@ -95,15 +101,19 @@ def get_email_info():
 
             # Loops through each header or subject in msg
             for header in msg['payload']['headers']:
-                # Determines if the headers name is equal to the subject
+                # Determines if the emails headers name is equal to subject
                 if header['name'] == 'Subject':
                     # Assigns the header value to subject
                     subject = header['value']
                     break
+                # Deterines if the emails headers name is equal to From
                 elif header['name'] == 'From':
+                    # Assigns the header value to sender_info
                     sender_info = header['value']
+                    # Sets the values of name and email to there own values 
                     sender_name, sender_email = parse_sender_info(sender_info)
                 
+            # Appends the subject, sender name and email, and message to the email_info list
             email_info_list.append({
                 'subject': subject,
                 'sender_name': sender_name,
@@ -127,6 +137,7 @@ def get_email_info():
 
     return email_info_list
 
+# Parses the sender info into name and email 
 def parse_sender_info(sender_info):
     # Parse sender info in the format "Name <email>"
     sender_name, sender_email = sender_info.split('<')
@@ -136,6 +147,7 @@ def parse_sender_info(sender_info):
     # Returns senders name and email 
     return sender_name, sender_email
 
+# Groups emails by senders
 def get_grouped_emails():
     # Groups up emails by sender 
 
@@ -159,8 +171,49 @@ def get_grouped_emails():
     # Returns the grouped emails
     return grouped_emails
 
+# Gets the labels
+def get_label_info():
+    # Gets the credits from the authentication function
+    creds = authenticate_gmail()
+
+    #
+    label_info_list = []
+
+    # Calls Gmail API and tries to run the code
+    try:
+        # Builds access to the gmail 
+        service = build('gmail', 'v1', credentials=creds)
+
+        # List all labels from the user
+        # Assigns the listed labels to results
+        results = service.users().labels().list(userId='me').execute()
+        labels = results.get('labels', [])
+
+        if not labels:
+            print("No labels found")
+            return label_info_list
+        
+        for label in labels:
+            label_name = label['name']
+            label_info = {
+                'label_name': label_name
+            }
+            label_info_list.append(label_info)
+
+        
+
+    except HttpError as error:
+        #TODO(developer) - Handle errors from Gmail API
+        print(f'An error ocurred:{error}')
+
+    return label_info_list
+
 # Runs main function
 if __name__ == '__main__':
-    # Calls the main function
+    # Calls the email function
     grouped_emails = get_grouped_emails()
     print(grouped_emails)
+
+    #Calls the label function
+    label_info_list = get_label_info()
+    print(label_info_list)
