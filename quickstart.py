@@ -55,7 +55,7 @@ def authenticate_gmail():
             flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials.json', SCOPES)
             # Opens a local server in port 0 and display the success message 'test'
-            creds = flow.run_local_server(port=0,success_message='test')
+            creds = flow.run_local_server(success_message='test')
         # Saves the credentials for the next run
         # Uses open to open the token.pickle file in write binary mode (wb) 
         with open('token.pickle', 'wb') as token:
