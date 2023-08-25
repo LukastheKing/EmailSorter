@@ -68,7 +68,7 @@ def get_email_info():
     # Gets the credits from the authentication function
     creds = authenticate_gmail()
 
-    # Creates an empty list fo the subjects
+    # Creates an empty list for the subjects
     email_info_list = []
 
     # Calls the Gmail API and tries to run the code
@@ -176,7 +176,7 @@ def get_label_info():
     # Gets the credits from the authentication function
     creds = authenticate_gmail()
 
-    #
+    # Creates empty list for the labels
     label_info_list = []
 
     # Calls Gmail API and tries to run the code
@@ -208,12 +208,37 @@ def get_label_info():
 
     return label_info_list
 
+def get_email_labels(message_id):
+    # Gets the credits from the authentication function
+    creds = authenticate_gmail()
+
+    # Creates an empty lis for the email labels
+    email_labels = []
+
+    try:
+        # Builds service for the gmail API
+        service = build('gmail', 'v1', credentials=creds)
+
+        msg = service.users().messages().get(userId='me', id=message_id, format='metadata', metadataHeaders=['labelsIds']).execute()
+        label_ids = msg['labelIds']
+
+        for label_id in label_ids:
+            email_labels.append(label_id)
+
+    except HttpError as error:
+        print(f'An error ocurred: {error}')
+
+    return email_labels
+
 # Runs main function
 if __name__ == '__main__':
     # Calls the email function
-    grouped_emails = get_grouped_emails()
-    print(grouped_emails)
+    #grouped_emails = get_grouped_emails()
+    #pprint(grouped_emails)
 
-    #Calls the label function
-    label_info_list = get_label_info()
-    print(label_info_list)
+    # Calls the label function
+    #label_info_list = get_label_info()
+    #pprint(label_info_list)
+
+    # Calls the message label function
+    print('ello')
