@@ -200,14 +200,13 @@ def get_label_info():
             }
             label_info_list.append(label_info)
 
-        
-
     except HttpError as error:
         #TODO(developer) - Handle errors from Gmail API
         print(f'An error ocurred:{error}')
 
     return label_info_list
 
+# Gets the labels of all the emails in the inbox
 def get_email_labels(message_id):
     # Gets the credits from the authentication function
     creds = authenticate_gmail()
@@ -230,6 +229,15 @@ def get_email_labels(message_id):
 
     return email_labels
 
+def check_label_existance(label_name_to_check):
+    label_info_list = get_label_info()
+
+    for label_info in label_info_list:
+        if label_info['label_name'] == label_name_to_check:
+            return True
+        
+    return False
+
 # Runs main function
 if __name__ == '__main__':
     # Calls the email function
@@ -241,4 +249,12 @@ if __name__ == '__main__':
     #pprint(label_info_list)
 
     # Calls the message label function
-    print('ello')
+    label_name_to_check = "IMPORTANT"
+    label_exist = check_label_existance(label_name_to_check)
+    if label_exist:
+        print(f"The label '{label_name_to_check}' exists.")
+    else:
+        print(f"The label '{label_name_to_check}' does not exist.")
+
+    # Just so it works
+    print('')
