@@ -6,7 +6,7 @@ from __future__ import print_function
 import os.path
 # Imports pickle
 import pickle
-
+# Imports the pprint function form pprint 
 from pprint import pprint 
 
 # Imports Request from google.auth.transprot.request 
@@ -229,10 +229,14 @@ def get_email_labels(message_id):
 
     return email_labels
 
+# Checks the existence of certain labels 
 def check_label_existance(label_name_to_check):
+    # Gets the label info from the function get label info
     label_info_list = get_label_info()
 
+    # Loops throught the label info in the list
     for label_info in label_info_list:
+        # Checks if the label name is the same as the variables value
         if label_info['label_name'] == label_name_to_check:
             return True
         
