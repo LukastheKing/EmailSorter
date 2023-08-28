@@ -24,17 +24,12 @@ from googleapiclient.errors import HttpError
 
 # Sets the scope of the project to read only
 # If modyfying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.labels']
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.labels', 'https://www.googleapis.com/auth/gmail.modify']
 
 # Gets the authentication credits for the gmail api
 def authenticate_gmail():
     # sets creds value to None
     creds = None
-    
-    """
-        The file token.json stores the user's access and refresh tokens, and is 
-        created automatically when the authorization flow completes for the first time.
-    """
 
     # Creates the token.json file which stores the user's access and refresh tokens
     if os.path.exists('token.pickle'):
@@ -42,6 +37,7 @@ def authenticate_gmail():
         with open('token.pickle', 'rb') as token:
             # sets creds value to that on the token file using pickle.load
             creds = pickle.load(token)
+
     # If there are no (valid) credentials available, let the user log in.
     # Checks if theres no valid credentials 
     if not creds or not creds.valid:
@@ -230,35 +226,32 @@ def get_email_labels(message_id):
     return email_labels
 
 # Checks the existence of certain labels 
-def check_label_existance(label_name_to_check):
+def check_label_existance_for_sender(sender_email, label_name_to_check):
     # Gets the label info from the function get label info
     label_info_list = get_label_info()
 
     # Loops throught the label info in the list
     for label_info in label_info_list:
         # Checks if the label name is the same as the variables value
-        if label_info['label_name'] == label_name_to_check:
+        if label_info['label_name'] == label_name_to_check and label_info['sender_email'] == sender_email:
             return True
         
     return False
 
+def add_label_to_email(message_id, label_id):
+    creds = authenticate_gmail()
+
+    try:
+        service = build('gmail', 'v1', credentials=creds)
+
+        #
+        msg = service.users().messages().modify(userId='me', id=message_id, body={'addLabelIds':[label_id]}).execute()
+        print(f"Label added to email with ID {message_id}")
+    
+    except HttpError as error:
+        print(f'An error ocurred: {error}')
+
 # Runs main function
 if __name__ == '__main__':
-    # Calls the email function
-    #grouped_emails = get_grouped_emails()
-    #pprint(grouped_emails)
-
-    # Calls the label function
-    #label_info_list = get_label_info()
-    #pprint(label_info_list)
-
-    # Calls the message label function
-    label_name_to_check = "IMPORTANT"
-    label_exist = check_label_existance(label_name_to_check)
-    if label_exist:
-        print(f"The label '{label_name_to_check}' exists.")
-    else:
-        print(f"The label '{label_name_to_check}' does not exist.")
-
     # Just so it works
     print('')
