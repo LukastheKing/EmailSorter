@@ -11,6 +11,7 @@ from quickstart import check_label_existance_for_sender
 from quickstart import add_label_to_email
 # Imports the pprint function from pprint
 from pprint import pprint
+import re
 
 # Main code function
 
@@ -27,9 +28,16 @@ for sender_email, emails in grouped_emails.items():
     # Loops through the email info in emails
     for email_info in emails:
         # Gets the sender to check
-        sender_email_to_check = email_info['sender_email']
+        sender_name = email_info['sender_name']
+        print(f"Sender's Name: {sender_name}") # Debug
+
+        if email_info['sender_name'] is not None:
+            valid_label_name = re.sub(r'[^a-zA-Z0-9]', '_', sender_name)
+        else:
+            valid_label_name = "unknown_sender_label"
+
         # Sets the label name to be checked to the value as the sender email
-        label_name_to_check = sender_email_to_check
+        label_name_to_check = valid_label_name
 
         # Gets the email subject
         subject = email_info['subject']
@@ -37,11 +45,9 @@ for sender_email, emails in grouped_emails.items():
         snippet = email_info['message']['snippet']
         # Gets the message ID
         message_id = email_info['message']['id']
-        # Gets the email labels
-        email_labels = get_email_labels(message_id)
 
         # Checks if label exist based on the senders email and label name
-        label_exists = check_label_existance_for_sender(sender_email_to_check, label_name_to_check)
+        label_exists = check_label_existance_for_sender(sender_name, label_name_to_check)
                 
         # Printing the subject
         print(f"Subject: {subject} \n")
@@ -50,11 +56,20 @@ for sender_email, emails in grouped_emails.items():
         if label_exists:
             print(f"The label '{label_name_to_check}' exists for this email.")
         else:
-            print(f"The label '{label_name_to_check}' does not exist for this email")
+            existing_labels = get_label_info()
+            existing_label_names = [label['label_name'] for label in existing_labels]
 
-            add_label_to_email(message_id, sender_email_to_check)
-            print(f"Label '{sender_email_to_check}' added to email.")
+            if valid_label_name not in existing_label_names:
+                add_label_to_email(message_id, valid_label_name)
+                print(f"Label '{valid_label_name}' created and added to email.")
+            else:
+                label_id = existing_labels[existing_label_names.index(valid_label_name)]['label_id']
+                add_label_to_email(message_id, label_id)
+                print(f"Label '{valid_label_name}' added to email.")
         
+        # Gets the email labels
+        email_labels = get_email_labels(message_id)
+
         if email_labels:
             print(f"\nLabels: {', '.join(email_labels)} \n")
         else:

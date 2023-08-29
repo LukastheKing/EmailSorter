@@ -136,9 +136,14 @@ def get_email_info():
 # Parses the sender info into name and email 
 def parse_sender_info(sender_info):
     # Parse sender info in the format "Name <email>"
-    sender_name, sender_email = sender_info.split('<')
-    sender_name = sender_name.strip()
-    sender_email = sender_email.replace('>', '').strip()
+    if '<' in sender_info and '>' in sender_info:
+        sender_name, sender_email = sender_info.split('<')
+        sender_name = sender_name.strip()
+        sender_email = sender_email.replace('>', '').strip()
+    else:
+        # Set default values if sender information is not in expected format
+        sender_name = "Unknown"
+        sender_email = "unknown@example.com"
     
     # Returns senders name and email 
     return sender_name, sender_email
@@ -226,27 +231,37 @@ def get_email_labels(message_id):
     return email_labels
 
 # Checks the existence of certain labels 
-def check_label_existance_for_sender(sender_email, label_name_to_check):
+def check_label_existance_for_sender(sender_name, label_name_to_check):
     # Gets the label info from the function get label info
     label_info_list = get_label_info()
 
     # Loops throught the label info in the list
     for label_info in label_info_list:
         # Checks if the label name is the same as the variables value
-        if label_info['label_name'] == label_name_to_check and label_info['sender_email'] == sender_email:
+        if label_info['label_name'] == label_name_to_check and label_info['sender_name'] == sender_name:
             return True
         
     return False
 
-def add_label_to_email(message_id, label_id):
+def add_label_to_email(message_id, label_name):
     creds = authenticate_gmail()
 
     try:
         service = build('gmail', 'v1', credentials=creds)
 
-        #
+        existing_labels = get_label_info()
+        existing_label_names = [label['label_name'] for label in existing_labels]
+
+        if label_name not in existing_label_names:
+            # Create a new label with the name provided
+            label = {'name': label_name}
+            label = service.users().labels().create(userId='me', body=label).execute()
+            label_id = label['id']
+        else:
+            label_id = existing_labels[existing_label_names.index(label_name)]['label_id']
+        
         msg = service.users().messages().modify(userId='me', id=message_id, body={'addLabelIds':[label_id]}).execute()
-        print(f"Label added to email with ID {message_id}")
+        print(f"Label '{label_name}' added to email with ID {message_id}")
     
     except HttpError as error:
         print(f'An error ocurred: {error}')
