@@ -253,5 +253,5 @@ def add_label_to_email(message_id, label_id):
 
 # Runs main function
 if __name__ == '__main__':
-    # Just so it works
+    # Printing funciton
     print('')
