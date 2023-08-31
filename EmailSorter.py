@@ -54,18 +54,18 @@ for sender_email, emails in grouped_emails.items():
         pprint(f"Snippet: {snippet}")
 
         if label_exists:
-            print(f"The label '{label_name_to_check}' exists for this email.")
+            print(f"\nThe label '{label_name_to_check}' exists for this email.")
         else:
             existing_labels = get_label_info()
             existing_label_names = [label['label_name'] for label in existing_labels]
 
             if valid_label_name not in existing_label_names:
                 add_label_to_email(message_id, valid_label_name)
-                print(f"Label '{valid_label_name}' created and added to email.")
+                print(f"\nLabel '{valid_label_name}' created and added to email.")
             else:
                 label_id = existing_labels[existing_label_names.index(valid_label_name)]['label_id']
                 add_label_to_email(message_id, label_id)
-                print(f"Label '{valid_label_name}' added to email.")
+                print(f"\nLabel '{valid_label_name}' added to email.")
         
         # Gets the email labels
         email_labels = get_email_labels(message_id)
