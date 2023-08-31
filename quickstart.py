@@ -196,8 +196,10 @@ def get_label_info():
         
         for label in labels:
             label_name = label['name']
+            label_id = label['id']
             label_info = {
-                'label_name': label_name
+                'label_name': label_name,
+                'label_id': label_id
             }
             label_info_list.append(label_info)
 
@@ -238,7 +240,7 @@ def check_label_existance_for_sender(sender_name, label_name_to_check):
     # Loops throught the label info in the list
     for label_info in label_info_list:
         # Checks if the label name is the same as the variables value
-        if label_info['label_name'] == label_name_to_check and label_info['sender_name'] == sender_name:
+        if label_info['label_name'] == label_name_to_check and 'sender_name' in label_info and label_info.get('sender_name') == sender_name:
             return True
         
     return False
