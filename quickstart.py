@@ -226,10 +226,15 @@ def get_email_labels(message_id):
         service = build('gmail', 'v1', credentials=creds)
 
         msg = service.users().messages().get(userId='me', id=message_id, format='metadata', metadataHeaders=['labelsIds']).execute()
-        label_ids = msg['labelIds']
+        label_ids = msg.get('labelIds', [])
+
+        existing_labels = get_label_info()
 
         for label_id in label_ids:
-            email_labels.append(label_id)
+            #email_labels.append(label_id)
+            label_name = next((label['label_name'] for label in existing_labels if label['label_id'] == label_id), None)
+            if label_name:
+                email_labels.append(label_name)
 
     except HttpError as error:
         print(f'An error ocurred: {error}')
